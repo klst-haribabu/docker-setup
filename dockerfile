@@ -31,14 +31,10 @@ RUN apt-get update && \
 RUN sed -i "s/variables_order.*/variables_order = \"EGPCS\"/g" /etc/php5/apache2/php.ini
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-
-RUN curl -SL "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$MONGO_VERSION.tgz" -o mongo.tgz \
-  && curl -SL "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$MONGO_VERSION.tgz.sig" -o mongo.tgz.sig \
-  && curl -SL "https://www.mongodb.org/static/pgp/server-$MONGO_PGP.asc" -o server-$MONGO_PGP.asc \
-  && gpg --import server-$MONGO_PGP.asc \
-  && gpg --verify mongo.tgz.sig \
-  && tar -xvf mongo.tgz -C /usr/local --strip-components=1 \
-  && rm mongo.tgz*
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6 \
+  && echo "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/$MONGO_VERSION multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list \
+  && apt-get update \
+  && apt-get install -y mongodb-org \
 
 RUN pecl install mongo-$MONGO_PHP_VERSION && \
     mkdir -p /etc/php5/mods-available && \
