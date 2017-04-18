@@ -25,7 +25,8 @@ RUN apt-get update && \
         php5-curl \
         php5-mcrypt \
         php-pear \
-        php-apc && \
+        php-apc \
+        ssh && \
     rm -rf /var/lib/apt/lists/*
 
 RUN sed -i "s/variables_order.*/variables_order = \"EGPCS\"/g" /etc/php5/apache2/php.ini
@@ -51,7 +52,14 @@ VOLUME ["/var/log/apache2"]
 
 EXPOSE 80 80
 
-#ADD sites-enabled/vhost.conf /etc/apache2/sites-enabled/
+# Allow SSH Port for any update for the image.
+RUN ufw allow 22
+
+ADD e2rweb.conf /etc/apache2/sites-enabled/
+
+RUN a2ensite /etc/apache2/sites-enabled/e2rweb.conf \
+    && service apache2 start 
+
 #CMD ["/run.sh"]
 
 # grr, ENTRYPOINT resets CMD now
