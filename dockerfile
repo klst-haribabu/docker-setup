@@ -54,7 +54,7 @@ VOLUME ["/var/log/apache2"]
 EXPOSE 80 80
 
 # Allow SSH Port for any update for the image.
-RUN ufw allow 22
+RUN sudo ufw allow 22
 
 ADD e2rweb.conf /etc/apache2/sites-enabled/
 
