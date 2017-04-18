@@ -55,9 +55,9 @@ EXPOSE 80 80
 
 # Allow SSH Port for any update for the image.
 
-ADD e2rweb.conf /etc/apache2/sites-enabled/
+ADD e2rweb.conf /etc/apache2/sites-available/
 
-RUN a2ensite /etc/apache2/sites-enabled/e2rweb.conf \
+RUN a2ensite /etc/apache2/sites-available/e2rweb.conf \
     && service apache2 start 
 
 #CMD ["/run.sh"]
